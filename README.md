@@ -1,54 +1,43 @@
-# cognitoログインをReactアプリに組み込む手順をまとめたリポジトリ
+# CognitoにLINEログインを追加するまで
 
-1.create react app & add dependency
-```
-npx create-react-app web --template typescript
-cd web
-npm install aws-amplify @aws-amplify/ui-react
-```
+1.LINE Developersにサインインする
+https://developers.line.biz/console/
 
-2.add amplify fonts to putlic/index.html
-```
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:slnt,wght@-10..0,100..900&display=swap"
-      rel="stylesheet"
-    />
-```
+2.プロパイダを作成
+![Alt text](image.png)
 
-3. change src/App.tsx to implements authentication
-```
-import { Amplify } from 'aws-amplify';
+3.作成したプロバイダにチャンネルを追加する
+![Alt text](image-1.png)
 
-import { Authenticator } from '@aws-amplify/ui-react';
-import '@aws-amplify/ui-react/styles.css';
+チャンネル基本設定から、Open ID Connect申請をして保存
+![Alt text](image-2.png)
+![Alt text](image-3.png)
 
-Amplify.configure({
-  aws_project_region: process.env.REACT_APP_AWS_PROJECT_REGION,
-  aws_cognito_region: process.env.REACT_APP_AWS_COGNITO_REGION,
-  aws_user_pools_id: process.env.REACT_APP_AWS_USER_POOLS_ID,
-  aws_user_pools_web_client_id:  process.env.REACT_APP_AWS_USER_POOLS_CLIENT_ID,
-});
+4.コールバックURLを開く
+Congitoドメイン + /oauth2/idpresponseを設定する
+![Alt text](image-4.png)
 
-export default function App() {
-  return (
-    <Authenticator>
-      {({ signOut, user }) => (
-        <main>
-          <h1>Hello {user.username}</h1>
-          <button onClick={signOut}>Sign out</button>
-        </main>
-      )}
-    </Authenticator>
-  );
-}
-```
+5.チャンネルを公開する
+![Alt text](image-5.png)
 
-4.  set local environment
-```
-$ export REACT_APP_AWS_PROJECT_REGION=ap-northeast-1
-$ export REACT_APP_AWS_COGNITO_REGION=ap-northeast-1
-$ export REACT_APP_AWS_USER_POOLS_ID=<UserPoolID>
-$ export REACT_APP_AWS_USER_POOLS_CLIENT_ID=<UserPoolClientID>
-```
+6.Cognito側にLINEログインを追加する
+IDPを追加する
+![Alt text](image-6.png)
+
+![Alt text](image-7.png)
+
+- クライアント IDに上記LINEログインチャンネルのチャンネルIDを指定する
+- クライアントのシークレットに上記LINEログインチャンネルのクライアントシークレットを指定する
+- 許可されたスコープに[profile email openid]を指定する
+
+
+![Alt text](image-8.png)
+- 発行者 URL を通じた自動入力を選択する
+- 発行者 URLにhttps://access.line.meを指定する
+- OpenID Connect 属性にemailを指定する
+
+7. Cognito ホスティングUIにLINEログインを組み込む
+![Alt text](image-9.png)
+![Alt text](image-10.png)
+![Alt text](image-11.png)
+![Alt text](image-12.png)
