@@ -1,3 +1,5 @@
+# cognitoログインをReactアプリに組み込む手順をまとめたリポジトリ
+
 1.create react app & add dependency
 ```
 npx create-react-app web --template typescript
