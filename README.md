@@ -4,7 +4,7 @@
 ```
 npx create-react-app web --template typescript
 cd web
-yarn add aws-amplify @aws-amplify/ui-react
+npm install aws-amplify @aws-amplify/ui-react
 ```
 
 2.add amplify fonts to putlic/index.html
